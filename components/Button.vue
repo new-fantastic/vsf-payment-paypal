@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     platformTotal () {
-      return store.state.cart.platformTotalSegments
+      return this.$store.state.cart.platformTotalSegments
     }
   },
   methods: {
@@ -73,14 +73,14 @@ export default {
           name: product.name,
           unit_amount: {
             currency_code: this.currencyCode,
-            value: product.price
+            value: product.totals.base_price_incl_tax.toFixed(2)
           },
-          tax: {
-            currency_code: this.currencyCode,
-            value: ''
+          // tax: {
+            // currency_code: this.currencyCode,
+            // value: ''
             // optional tax already set in totals, this is not needed
             // value: (product.totals.price_incl_tax - product.totals.price).toFixed(2)
-          },
+          // },
           description: (product.options && product.options.length > 0) ? product.options.map((el) => { return el.value }).join(',') : '',
           quantity: product.qty,
           sku: product.sku,
@@ -123,16 +123,16 @@ export default {
           },
           shipping: {
             currency_code: this.currencyCode,
-            value: this.getSegmentTotal('shipping')
+            value: this.$store.state.cart.platformTotals.base_shipping_incl_tax
           },
           discount: {
             currency_code: this.currencyCode,
             value: this.getSegmentTotal('discount')
           },
-          tax_total: {
-            currency_code: this.currencyCode,
-            value: this.getSegmentTotal('tax')
-          }
+          // tax_total: {
+          //   currency_code: this.currencyCode,
+          //   value: this.getSegmentTotal('tax')
+          // }
         },
         value: this.getSegmentTotal('grand_total'),
         currency_code: this.currencyCode
@@ -196,13 +196,7 @@ export default {
     },
     async onApprove (data, actions) {
       const totals = this.$store.getters['cart/getTotals']
-      this.$store.commit('google-tag-manager/SET_ORDER_DETAILS', {
-        total_due: totals.find((t) => t['code'].toString() === 'grand_total')['value'],
-        tax_amount: totals.find((t) => t['code'].toString() === 'tax')['value'],
-        shipping_amount: totals.find((t) => t['code'].toString() === 'shipping')['value'],
-        coupon_code: this.$store.getters['cart/getCoupon'] ? this.$store.getters['cart/getCoupon']['code'] : '',
-        cartId: this.$store.getters['cart/getCartToken']
-      })
+
       let additionalMethod = {
         // magento 2 fields expects
         paypal_express_checkout_token: this.tokenId,
