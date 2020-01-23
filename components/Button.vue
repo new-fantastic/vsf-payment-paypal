@@ -129,10 +129,10 @@ export default {
             currency_code: this.currencyCode,
             value: this.getSegmentTotal('discount')
           },
-          // tax_total: {
-          //   currency_code: this.currencyCode,
-          //   value: this.getSegmentTotal('tax')
-          // }
+          tax_total: {
+            currency_code: this.currencyCode,
+            value: 0 //this.getSegmentTotal('tax')
+          }
         },
         value: this.getSegmentTotal('grand_total'),
         currency_code: this.currencyCode
