@@ -1,10 +1,12 @@
 <template>
-  <div class="paypal-button" />
+  <BaseLoader v-if="loadingBtn" />
+  <div v-else class="paypal-button" />
 </template>
 
 <script>
 import store from '@vue-storefront/core/store'
 import { currentStoreView } from '@vue-storefront/core/lib/multistore'
+import config from 'config'
 
 export default {
   name: 'PaypalButton',
@@ -25,7 +27,8 @@ export default {
     return {
       tokenId: null,
       currencyCode: storeView.i18n.currencyCode,
-      locale: storeView.i18n.defaultLocale.replace('-', '_') // Converting to PayPal format,
+      locale: storeView.i18n.defaultLocale.replace('-', '_'), // Converting to PayPal format,
+      loadingBtn: true
     }
   },
   mounted () {
@@ -38,11 +41,24 @@ export default {
   },
   methods: {
     setButtonAndTotals () {
-      window.paypal.Buttons({
-        style: this.styling,
-        createOrder: this.createOrderNvp,
-        onApprove: this.onApprove
-      }).render('.paypal-button')
+      this.loadingBtn = true
+      const storeView = currentStoreView()
+      const { currencyCode } = storeView.i18n
+      const clientId = config.paypal.clientId
+      const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currencyCode}&disable-funding=card,credit&intent=authorize`
+      var script = document.createElement('script')
+      script.setAttribute('src', sdkUrl)
+      script.onload = () => {
+        this.loadingBtn = false
+        this.$nextTick(() => {
+          window.paypal.Buttons({
+            style: this.styling,
+            createOrder: this.createOrderNvp,
+            onApprove: this.onApprove
+          }).render('.paypal-button')
+        })
+      }
+      document.head.appendChild(script)
     },
     getSegmentTotal (name) {
       const total = this.platformTotal.filter(segment => {
