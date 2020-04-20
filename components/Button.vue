@@ -1,6 +1,10 @@
 <template>
   <BaseLoader v-if="loadingBtn" />
-  <div v-else class="paypal-button" />
+  <div
+    v-else
+    class="paypal-button"
+    :class="{'paypal-button--disabled': disabled}"
+  />
 </template>
 
 <script>
@@ -20,6 +24,10 @@ export default {
         shape: 'rect',
         label: 'paypal'
       })
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -228,3 +236,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .paypal-button {
+    transition: opacity .3s;
+  }
+  .paypal-button--disabled {
+    opacity: .3;
+    pointer-events: none;
+  }
+</style>
