@@ -20,8 +20,8 @@ export default {
       required: false,
       default: () => ({
         layout: 'vertical',
-        color: 'blue',
-        shape: 'rect',
+        color: 'gold',
+        shape: 'pill',
         label: 'paypal'
       })
     },
