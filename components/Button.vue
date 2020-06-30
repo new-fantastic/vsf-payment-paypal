@@ -139,11 +139,18 @@ export default {
       }
     },
     getAmount () {
+      const grandTotals = this.$store.state.cart.platformTotalSegments.find(item => item.code === 'grand_total');
+      let grandTotalsValue = grandTotals.value
+      if (this.$store.state.cart.platformTotals.discount_amount < 0) {
+        grandTotalsValue = this.$store.state.cart.platformTotals.subtotal_incl_tax + this.$store.state.cart.platformTotals.shipping_incl_tax
+          + this.$store.state.cart.platformTotals.discount_amount
+      }
+
       return {
         breakdown: {
           item_total: {
             currency_code: this.currencyCode,
-            value: this.getSegmentTotal('subtotal')
+            value: this.$store.state.cart.platformTotals.subtotal_incl_tax
           },
           shipping: {
             currency_code: this.currencyCode,
@@ -158,7 +165,7 @@ export default {
             value: 0 //this.getSegmentTotal('tax')
           }
         },
-        value: this.getSegmentTotal('grand_total'),
+        value: grandTotalsValue,
         currency_code: this.currencyCode
       }
     },
