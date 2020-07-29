@@ -141,8 +141,15 @@ export default {
     getAmount () {
       const grandTotals = this.$store.state.cart.platformTotalSegments.find(item => item.code === 'grand_total');
       let grandTotalsValue = grandTotals.value
+      
+      let shipping
+      const { storeCode } = currentStoreView();
+      if (grandTotalsValue >= 30) shipping = 0
+      else if (storeCode === 'gb') shipping = config.shipping.default[storeCode]
+      else shipping = config.shipping.default.other
+
       if (this.$store.state.cart.platformTotals.discount_amount < 0) {
-        grandTotalsValue = this.$store.state.cart.platformTotals.subtotal_incl_tax + this.$store.state.cart.platformTotals.shipping_incl_tax
+        grandTotalsValue = this.$store.state.cart.platformTotals.subtotal_incl_tax + shipping
           + this.$store.state.cart.platformTotals.discount_amount
       }
 
@@ -154,7 +161,7 @@ export default {
           },
           shipping: {
             currency_code: this.currencyCode,
-            value: this.$store.state.cart.platformTotals.base_shipping_incl_tax
+            value: shipping
           },
           discount: {
             currency_code: this.currencyCode,
@@ -165,7 +172,7 @@ export default {
             value: 0 //this.getSegmentTotal('tax')
           }
         },
-        value: grandTotalsValue,
+        value: grandTotalsValue.toFixed(2),
         currency_code: this.currencyCode
       }
     },
