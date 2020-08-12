@@ -53,7 +53,7 @@ export default {
       const storeView = currentStoreView()
       const { currencyCode } = storeView.i18n
       const clientId = config.paypal.clientId
-      const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currencyCode}&disable-funding=card,credit&intent=capture`
+      const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currencyCode}&disable-funding=card,credit&intent=authorize`
       var script = document.createElement('script')
       script.setAttribute('src', sdkUrl)
       script.onload = () => {
