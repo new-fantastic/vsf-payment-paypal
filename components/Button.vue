@@ -142,11 +142,12 @@ export default {
       const grandTotals = this.$store.state.cart.platformTotalSegments.find(item => item.code === 'grand_total');
       let grandTotalsValue = grandTotals.value
 
-      let shipping = this.$store.state.cart.platformTotals.shipping_incl_tax
-      // const { storeCode } = currentStoreView();
-      // if (grandTotalsValue >= 30) shipping = 0
-      // else if (storeCode === 'gb') shipping = config.shipping.default[storeCode]
-      // else shipping = config.shipping.default.other
+      // let shipping = this.$store.state.cart.platformTotals.shipping_incl_tax
+      let shipping
+      const { storeCode } = currentStoreView();
+      if (grandTotalsValue >= 30) shipping = 0
+      else if (storeCode === 'gb') shipping = config.shipping.default[storeCode]
+      else shipping = config.shipping.default.other
 
       if (this.$store.state.cart.platformTotals.discount_amount < 0) {
         grandTotalsValue = this.$store.state.cart.platformTotals.subtotal_incl_tax + this.$store.state.cart.platformTotals.shipping_incl_tax
@@ -172,7 +173,7 @@ export default {
             value: 0 //this.getSegmentTotal('tax')
           }
         },
-        value: grandTotalsValue,
+        value: grandTotalsValue + shipping,
         currency_code: this.currencyCode
       }
     },
@@ -187,7 +188,8 @@ export default {
           method_code: store.state.checkout.shippingDetails.shippingMethod,
           carrier_code: store.state.checkout.shippingDetails.shippingCarrier,
           payment_method: null
-        }
+        },
+        forceServerSync: true
       }).then(() => {
         // create order using Server Side methods same as magento 2....
         return store.dispatch('payment-paypal-magento2/setExpressCheckout', {
