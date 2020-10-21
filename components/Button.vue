@@ -142,10 +142,10 @@ export default {
       const grandTotals = this.$store.state.cart.platformTotalSegments.find(item => item.code === 'grand_total');
       let grandTotalsValue = grandTotals.value
 
-      // let shipping = this.$store.state.cart.platformTotals.shipping_incl_tax
       let shipping
       const { storeCode } = currentStoreView();
-      if (grandTotalsValue >= 30) shipping = 0
+      const freeShippingMinValue = config.shipping.freeShipping.minAmount
+      if (grandTotalsValue >= freeShippingMinValue) shipping = 0
       else if (storeCode === 'gb') shipping = config.shipping.default[storeCode]
       else shipping = config.shipping.default.other
 
