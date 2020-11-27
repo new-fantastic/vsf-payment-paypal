@@ -151,8 +151,7 @@ export default {
       const freeShippingMinValue = config.shipping.freeShipping.minAmount
       if (this.isAp) shipping = 0
       else if (grandTotalsValue >= freeShippingMinValue) shipping = 0
-      else if (storeCode === 'gb') shipping = config.shipping.default[storeCode]
-      else shipping = config.shipping.default.other
+      else shipping = config.shipping.default
 
       if (this.$store.state.cart.platformTotals.discount_amount < 0) {
         grandTotalsValue = this.$store.state.cart.platformTotals.subtotal_incl_tax + this.$store.state.cart.platformTotals.shipping_incl_tax
