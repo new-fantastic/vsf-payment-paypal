@@ -11,6 +11,7 @@
 import store from '@vue-storefront/core/store'
 import { currentStoreView } from '@vue-storefront/core/lib/multistore'
 import config from 'config'
+import lodashGet from 'lodash-es/get'
 
 export default {
   name: 'PaypalButton',
@@ -45,6 +46,9 @@ export default {
   computed: {
     platformTotal () {
       return this.$store.state.cart.platformTotalSegments
+    },
+    isAp () {
+      return lodashGet(this, '$store.state["vsf-ups"].picks.ap') !== null
     }
   },
   methods: {
@@ -145,7 +149,8 @@ export default {
       let shipping
       const { storeCode } = currentStoreView();
       const freeShippingMinValue = config.shipping.freeShipping.minAmount
-      if (grandTotalsValue >= freeShippingMinValue) shipping = 0
+      if (this.isAp) shipping = 0
+      else if (grandTotalsValue >= freeShippingMinValue) shipping = 0
       else if (storeCode === 'gb') shipping = config.shipping.default[storeCode]
       else shipping = config.shipping.default.other
 
