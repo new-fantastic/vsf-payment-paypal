@@ -45,6 +45,9 @@ export default {
   computed: {
     platformTotal () {
       return this.$store.state.cart.platformTotalSegments
+    },
+    isAp () {
+      return lodashGet(this, '$store.state["vsf-ups"].picks.option', '') === 'ups-access-point'
     }
   },
   methods: {
@@ -144,10 +147,12 @@ export default {
 
       let shipping
       const { storeCode } = currentStoreView();
-      const freeShippingMinValue = config.shipping.freeShipping.minAmount
+      const freeShippingMinValue = this.isAp ? config.shipping.freeShipping.AP : config.shipping.freeShipping.toAddress
+      const defaulShippingValue = this.isAp ? config.shipping.defaultToAP : config.shipping.defaultToAddress
+
       if (grandTotalsValue >= freeShippingMinValue) shipping = 0
-      else if (storeCode === 'gb') shipping = config.shipping.default[storeCode]
-      else shipping = config.shipping.default.other
+      else if (storeCode === 'gb') shipping = defaulShippingValue[storeCode]
+      else shipping = defaulShippingValue.other
 
       if (this.$store.state.cart.platformTotals.discount_amount < 0) {
         grandTotalsValue = this.$store.state.cart.platformTotals.subtotal_incl_tax + this.$store.state.cart.platformTotals.shipping_incl_tax
