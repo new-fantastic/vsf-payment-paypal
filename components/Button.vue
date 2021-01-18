@@ -11,6 +11,7 @@
 import store from '@vue-storefront/core/store'
 import { currentStoreView } from '@vue-storefront/core/lib/multistore'
 import config from 'config'
+import lodashGet from 'lodash-es/get'
 
 export default {
   name: 'PaypalButton',
