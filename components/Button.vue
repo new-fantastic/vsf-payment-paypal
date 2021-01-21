@@ -148,12 +148,13 @@ export default {
 
       let shipping
       const { storeCode } = currentStoreView();
-      const freeShippingMinValue = this.isAp ? config.shipping.freeShipping.AP : config.shipping.freeShipping.toAddress
-      const defaulShippingValue = this.isAp ? config.shipping.defaultToAP : config.shipping.defaultToAddress
+      const shippingConfig = storeCode === 'gb' ? config.shipping.countries.gb : config.shipping.countries.other
+
+      const freeShippingMinValue = this.isAp ? shippingConfig.freeShipping.toAP : shippingConfig.freeShipping.toAddress
+      const defaultShippingValue = this.isAp ? shippingConfig.default.toAP : shippingConfig.default.toAddress
 
       if (grandTotalsValue >= freeShippingMinValue) shipping = 0
-      else if (storeCode === 'gb') shipping = defaulShippingValue[storeCode]
-      else shipping = defaulShippingValue.other
+      else shipping = defaultShippingValue
 
       if (this.$store.state.cart.platformTotals.discount_amount < 0) {
         grandTotalsValue = this.$store.state.cart.platformTotals.subtotal_incl_tax + this.$store.state.cart.platformTotals.shipping_incl_tax
