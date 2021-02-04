@@ -149,9 +149,6 @@ export default {
       const freeShippingMinValue = shippingConfig.freeShipping.toAddress
       const defaultShippingValue = shippingConfig.default.toAddress
 
-      const freeShippingMinValue = this.isAp ? shippingConfig.freeShipping.toAP : shippingConfig.freeShipping.toAddress
-      const defaultShippingValue = this.isAp ? shippingConfig.default.toAP : shippingConfig.default.toAddress
-
       if (grandTotalsValue >= freeShippingMinValue) shipping = 0
       else shipping = defaultShippingValue
 
