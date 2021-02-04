@@ -47,9 +47,6 @@ export default {
     platformTotal () {
       return this.$store.state.cart.platformTotalSegments
     },
-    isAp () {
-      return lodashGet(this, '$store.state["vsf-ups"].picks.option', '') === 'ups-access-point'
-    }
   },
   methods: {
     setButtonAndTotals () {
@@ -147,8 +144,10 @@ export default {
       let grandTotalsValue = grandTotals.value
 
       let shipping
-      const { storeCode } = currentStoreView();
+      const { storeCode } = currentStoreView()
       const shippingConfig = storeCode === 'gb' ? config.shipping.countries.gb : config.shipping.countries.other
+      const freeShippingMinValue = shippingConfig.freeShipping.toAddress
+      const defaultShippingValue = shippingConfig.default.toAddress
 
       const freeShippingMinValue = this.isAp ? shippingConfig.freeShipping.toAP : shippingConfig.freeShipping.toAddress
       const defaultShippingValue = this.isAp ? shippingConfig.default.toAP : shippingConfig.default.toAddress
